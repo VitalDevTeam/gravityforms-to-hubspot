@@ -49,7 +49,7 @@ function gf2hs_entry_form_field_value($field, $entry, $form) {
  * logic that applies to either one.
  */
 function gf2hs_add_entry_field_to_array($entry, $field, &$array) {
-	$field_id = $field['id'];
+	$field_id = (string)$field['id'];
 	$field_label = gf2hs_get_form_field_label($field);
 	$field_value = isset_and_true($entry, $field_id);
 
