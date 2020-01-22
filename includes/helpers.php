@@ -108,8 +108,9 @@ add_filter('gf2hs_entry_form_field_value_select', function($value, $entry, $form
  * OUT: ['The Field Name' => ['Foo', 'Bar']]
  */
 add_filter('gf2hs_entry_form_field_value_checkbox', function($value, $entry, $form, $field) {
-	$label = $field->label;
+	$label = gf2hs_get_form_field_label($field);
 	$checked = array_values($value);
+	$checked = implode(';', $checked);
 
 	return [$label => $checked];
 }, 10, 4);
@@ -149,6 +150,10 @@ function gf2hs_get_form_field_label($field) {
 
 	if ($custom_label = isset_and_true($field, 'customLabel')) {
 		$label = $custom_label;
+	}
+
+	if ($admin_label = isset_and_true($field, 'adminLabel')) {
+		$label = $admin_label;
 	}
 
 	return $label;
