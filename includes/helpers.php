@@ -13,7 +13,13 @@ function gf2hs_entry_to_array($entry, $form) {
 		return gf2hs_entry_form_field_value($field, $entry, $form);
 	}, $form['fields']);
 
-	return array_reduce($ret, 'array_merge', []);
+	$ret = array_filter($ret, function($r) { 
+		return is_array($r);
+	});
+
+	$ret = array_reduce($ret, 'array_merge', []);
+
+	return $ret;
 }
 
 /**
@@ -130,8 +136,8 @@ add_filter('gf2hs_entry_form_field_value_list', function($value) {
 add_filter('gf2hs_entry_form_field_value_consent', function($value, $entry, $form, $field) {
 	$ret = null;
 
-	if (isset_and_true($value, $field->label)) {
-		$ret = [$field->{'checkboxLabel'} => 1];
+	if (isset_and_true($value, 'Consent')) {
+		$ret = [$field->label => 1];
 	}
 
 	return $ret;
