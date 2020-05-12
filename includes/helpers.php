@@ -144,6 +144,14 @@ add_filter('gf2hs_entry_form_field_value_consent', function($value, $entry, $for
 }, 10, 4);
 
 /**
+ * Prevent password fields from sending data to hubspot
+ */
+add_filter('gf2hs_entry_form_field_value_password', function($value) {
+	return false;
+});
+
+
+/**
  * Pass in a field to get the label. Seems like you shouldn’t need a
  * function for this since there's $field['label'], but this will let you
  * use filters/overrides
