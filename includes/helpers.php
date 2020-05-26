@@ -150,6 +150,18 @@ add_filter('gf2hs_entry_form_field_value_password', function($value) {
 	return false;
 });
 
+/**
+ * Format file upload field so URLs are not escaped
+ */
+add_filter('gf2hs_entry_form_field_value_fileupload', function($value, $entry, $form, $field) {
+	foreach ($value as $v) {
+		$value = json_decode($v);
+	}
+	$value = implode(', ', $value);
+	$ret = [$field->label => $value];
+	return $ret;
+}, 10, 4);
+
 
 /**
  * Pass in a field to get the label. Seems like you shouldn’t need a
