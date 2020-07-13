@@ -281,7 +281,7 @@ class GF2HS extends GFAddOn {
 		$portal_id = get_option('leadin_portalId');
 
 		if (!$portal_id) {
-			throw new Exception('Can’t post to HubSpot because I dont have a portal ID!');
+			write_log('Can’t post to HubSpot because I dont have a portal ID!');
 			return false;
 		}
 
@@ -319,8 +319,6 @@ class GF2HS extends GFAddOn {
 	 */
 	public function after_submission($entry, $form) {
 		$form_guid = rgars($form, 'gf2hs/hubspot_form_id');
-
-		write_log($form_guid);
 
 		if (!$form_guid) {
 			write_log('No data sent');
