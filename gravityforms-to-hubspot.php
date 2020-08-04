@@ -1,13 +1,13 @@
 <?php
 /*
  * Plugin Name: Gravity Forms to HubSpot
- * Version: 1.0
+ * Version: 1.1
  * Plugin URI: https://vtldesign.com/
  * Description: Connects Gravity Forms to HubSpot. Requires Gravity Forms and Contact Form Builder for WordPress plugins.
  * Author: Vital
  * Author URI: https://vtldesign.com/
  * Requires at least: 4.0
- * Tested up to: 5.0.3
+ * Tested up to: 5.4
  * Text Domain: gravityforms-to-hubspot
  * Domain Path: /lang/
  */
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define( 'GF2HS_VERSION', '1.0' );
+define( 'GF2HS_VERSION', '1.1' );
 
 add_action( 'gform_loaded', array( 'Gravity_Forms_To_HubSpot', 'load' ), 5 );
 
