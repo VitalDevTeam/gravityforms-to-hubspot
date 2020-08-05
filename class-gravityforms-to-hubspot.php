@@ -331,11 +331,13 @@ class GF2HS extends GFAddOn {
 
 		$post_data = array_merge(gf2hs_entry_to_array($entry, $form), [
 			'hs_context' => $this->get_hubspot_context_json($url, $title),
-			]);
+		]);
 
-		$this->send_data_to_hubspot_form($post_data, $form_guid);
+		if ( rgar( $entry, 'status' ) !== 'spam' ) {
+			$this->send_data_to_hubspot_form($post_data, $form_guid);
+			write_log('Yes, data sent');
+		}
 
-		write_log('Yes, data sent');
 	}
 
 }

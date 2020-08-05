@@ -16,3 +16,6 @@ Connects Gravity Forms to HubSpot. Form submissions are sent to selected HubSpot
 - Prevent password fields from sending data
 - Add file field formatting
 - Prevent fatal error if portal ID does not exist
+
+### 1.2
+- Prevent spam submissions from going to HubSpot
