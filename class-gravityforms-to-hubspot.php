@@ -281,7 +281,9 @@ class GF2HS extends GFAddOn {
 		$portal_id = get_option('leadin_portalId');
 
 		if (!$portal_id) {
-			write_log('Can’t post to HubSpot because I dont have a portal ID!');
+			if (function_exists('write_log')) {
+				write_log('Can’t post to HubSpot because I dont have a portal ID!');
+			}
 			return false;
 		}
 
@@ -321,7 +323,6 @@ class GF2HS extends GFAddOn {
 		$form_guid = rgars($form, 'gf2hs/hubspot_form_id');
 
 		if (!$form_guid) {
-			write_log('No data sent');
 			return;
 		}
 
@@ -335,7 +336,6 @@ class GF2HS extends GFAddOn {
 
 		if ( rgar( $entry, 'status' ) !== 'spam' ) {
 			$this->send_data_to_hubspot_form($post_data, $form_guid);
-			write_log('Yes, data sent');
 		}
 
 	}

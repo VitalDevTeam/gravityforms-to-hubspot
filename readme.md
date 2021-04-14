@@ -19,3 +19,5 @@ Connects Gravity Forms to HubSpot. Form submissions are sent to selected HubSpot
 
 ### 1.2
 - Prevent spam submissions from going to HubSpot
+### 1.3
+- Check for required function isset_and_true
