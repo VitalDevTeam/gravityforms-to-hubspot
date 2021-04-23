@@ -31,14 +31,18 @@ class GF2HS extends GFAddOn {
 	public function init() {
 		parent::init();
 
-		add_filter('gform_pre_render', function($form) {
-			$this->update_global_contact();
-			return $form;
-		});
+		add_filter(
+			'gform_pre_render', function($form) {
+				$this->update_global_contact();
+				return $form;
+			}
+		);
 
-		add_action('gform_after_submission', function($entry, $form) {
-			$this->after_submission($entry, $form);
-		}, 10, 2);
+		add_action(
+			'gform_after_submission', function($entry, $form) {
+				$this->after_submission($entry, $form);
+			}, 10, 2
+		);
 	}
 
 	/**
@@ -53,6 +57,15 @@ class GF2HS extends GFAddOn {
 			[
 				'title'  => esc_html__( 'Settings', 'gravityforms-to-hubspot' ),
 				'fields' => [
+					[
+						'name'              => 'portal_id',
+						'label'             => esc_html__( 'HubSpot Portal ID', 'gravityforms-to-hubspot' ),
+						'placeholder'       => '1234567',
+						'type'              => 'text',
+						'instructions'      => 'Portal ID can be found by logging into users Hubspot account',
+						'class'             => 'medium',
+						'feedback_callback' => [$this, 'is_valid_setting'],
+					],
 					[
 						'name'              => 'apikey',
 						'label'             => esc_html__( 'HubSpot API Key', 'gravityforms-to-hubspot' ),
@@ -72,19 +85,23 @@ class GF2HS extends GFAddOn {
 	 */
 	public function form_settings_fields( $form ) {
 
-		$opts = array_map(function ($hs_form) use ($form) {
+		$opts = array_map(
+			function ($hs_form) use ($form) {
 
-			return [
-				'label' => esc_html($hs_form['name']),
-				'value' => $hs_form['guid'],
-			];
+				return [
+					'label' => esc_html($hs_form['name']),
+					'value' => $hs_form['guid'],
+				];
 
-		}, $this->get_hubspot_forms());
+			}, $this->get_hubspot_forms()
+		);
 
 		// Alphabetize options by label
-		usort($opts, function($a, $b) {
-			return $a['label'] <=> $b['label'];
-		});
+		usort(
+			$opts, function($a, $b) {
+				return $a['label'] <=> $b['label'];
+			}
+		);
 
 		return [
 			[
@@ -95,12 +112,14 @@ class GF2HS extends GFAddOn {
 						'type'    => 'select',
 						'name'    => 'hubspot_form_id',
 						'tooltip' => esc_html__( 'Select a HubSpot Form to map this to. If you need to map this form’s fields to a property with a different name, use the Admin Field Label setting on that field.', 'gravityforms-to-hubspot' ),
-						'choices' => array_merge([
+						'choices' => array_merge(
 							[
-								'label' => '-- Choose form --',
-								'value' => '',
-							],
-						], $opts),
+								[
+									'label' => '-- Choose form --',
+									'value' => '',
+								],
+							], $opts
+						),
 					],
 				],
 			],
@@ -128,9 +147,11 @@ class GF2HS extends GFAddOn {
 	 * @return array
 	 */
 	public function gform_entry_to_array($entry, $form) {
-		$ret = array_map(function($field) use ($entry, $form) {
-			return gf2hs_entry_form_field_value($field, $entry, $form);
-		}, $form['fields']);
+		$ret = array_map(
+			function($field) use ($entry, $form) {
+				return gf2hs_entry_form_field_value($field, $entry, $form);
+			}, $form['fields']
+		);
 
 		return array_reduce($ret, 'array_merge', []);
 	}
@@ -144,32 +165,36 @@ class GF2HS extends GFAddOn {
 	 */
 	public function update_global_contact() {
 		if ($hubspot_contact = static::get_hubspot_contact()) {
-			add_filter('gform_field_value', function($value, $field, $name) use ($hubspot_contact) {
-				$contact_properties = $hubspot_contact['properties'];
+			add_filter(
+				'gform_field_value', function($value, $field, $name) use ($hubspot_contact) {
+					$contact_properties = $hubspot_contact['properties'];
 
-				if (!$name || !isset_and_true($field, 'allowsPrepopulate')) {
-					return $value;
-				}
+					if (!$name || !isset_and_true($field, 'allowsPrepopulate')) {
+						return $value;
+					}
 
-				if ($contact_value = isset_and_true($contact_properties, $name)) {
-					$value = isset_and_true($contact_value, 'value');
+					if ($contact_value = isset_and_true($contact_properties, $name)) {
+						$value = isset_and_true($contact_value, 'value');
 
-					//Values are saved to HubSpot using the TEXT, so I need to
-					//map that back to the value where applicable
-					if ($value && ($choices = isset_and_true($field, 'choices'))) {
-						$choice = array_filter($choices, function($c) use ($value) {
-							return $c['text'] == $value;
-						});
+						//Values are saved to HubSpot using the TEXT, so I need to
+						//map that back to the value where applicable
+						if ($value && ($choices = isset_and_true($field, 'choices'))) {
+							$choice = array_filter(
+								$choices, function($c) use ($value) {
+									return $c['text'] == $value;
+								}
+							);
 
-						if (count($choice)) {
-							$choice = array_shift($choice);
-							$value = $choice['value'];
+							if (count($choice)) {
+								$choice = array_shift($choice);
+								$value = $choice['value'];
+							}
 						}
 					}
-				}
 
-				return $value;
-			}, 10, 4);
+					return $value;
+				}, 10, 4
+			);
 		}
 	}
 
@@ -233,9 +258,13 @@ class GF2HS extends GFAddOn {
 		}
 
 		if ($api_key) {
-			$query_string = http_build_query(array_merge([
-				'hapikey' => $api_key,
-			], $query));
+			$query_string = http_build_query(
+				array_merge(
+					[
+						'hapikey' => $api_key,
+					], $query
+				)
+			);
 
 			$api_url = sprintf('https://%s/%s?%s', $api_host, $endpoint, $query_string);
 
@@ -278,7 +307,10 @@ class GF2HS extends GFAddOn {
 	 * @return string
 	 */
 	public function send_data_to_hubspot_form($post_data, $form_id) {
-		$portal_id = get_option('leadin_portalId');
+		$settings = get_option('gravityformsaddon_gf2hs_settings');
+		if ($settings && isset($settings['portal_id'])) {
+			$portal_id = $settings['portal_id'];
+		}
 
 		if (!$portal_id) {
 			if (function_exists('write_log')) {
@@ -299,9 +331,11 @@ class GF2HS extends GFAddOn {
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
 		curl_setopt($ch, CURLOPT_URL, $endpoint);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-Type: application/x-www-form-urlencoded',
-		]);
+		curl_setopt(
+			$ch, CURLOPT_HTTPHEADER, [
+				'Content-Type: application/x-www-form-urlencoded',
+			]
+		);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 		$response    = curl_exec($ch);
@@ -330,11 +364,13 @@ class GF2HS extends GFAddOn {
 		$url = get_the_permalink($post_id);
 		$title = get_the_title($post_id);
 
-		$post_data = array_merge(gf2hs_entry_to_array($entry, $form), [
-			'hs_context' => $this->get_hubspot_context_json($url, $title),
-		]);
+		$post_data = array_merge(
+			gf2hs_entry_to_array($entry, $form), [
+				'hs_context' => $this->get_hubspot_context_json($url, $title),
+			]
+		);
 
-		if ( rgar( $entry, 'status' ) !== 'spam' ) {
+		if (rgar( $entry, 'status' ) !== 'spam') {
 			$this->send_data_to_hubspot_form($post_data, $form_guid);
 		}
 

@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Forms to HubSpot
  * Version: 1.3
  * Plugin URI: https://vtldesign.com/
- * Description: Connects Gravity Forms to HubSpot. Requires Gravity Forms and Official Hubspot WordPress plugins.
+ * Description: Connects Gravity Forms to HubSpot. Requires Gravity Forms.
  * Author: Vital
  * Author URI: https://vtldesign.com/
  * Requires at least: 4.0
